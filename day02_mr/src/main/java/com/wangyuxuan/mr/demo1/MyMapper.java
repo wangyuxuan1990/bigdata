@@ -21,12 +21,12 @@ import java.io.IOException;
 public class MyMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 
     private Text text;
-    private IntWritable intWritable = new IntWritable();
+    private IntWritable intWritable;
 
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
         text = new Text();
-        intWritable.set(1);
+        intWritable = new IntWritable(1);
     }
 
     /**

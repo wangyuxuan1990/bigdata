@@ -13,11 +13,11 @@ import java.io.IOException;
  */
 public class MyReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
-    private IntWritable intWritable = new IntWritable();
+    private IntWritable intWritable;
 
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
-        intWritable.set(0);
+        intWritable = new IntWritable();
     }
 
     /**
