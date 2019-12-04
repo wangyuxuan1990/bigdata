@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>day01_hdfs</module>
+        <module>day02_mr</module>
     </modules>
 
 </project>
