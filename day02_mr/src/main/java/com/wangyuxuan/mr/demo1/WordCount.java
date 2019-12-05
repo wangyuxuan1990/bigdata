@@ -41,7 +41,7 @@ public class WordCount extends Configured implements Tool {
         job.setJarByClass(WordCount.class);
 
         job.setInputFormatClass(TextInputFormat.class);
-        TextInputFormat.addInputPath(job, new Path("/Users/wangyuxuan/数据"));
+        TextInputFormat.addInputPath(job, new Path("file:///"));
 
         job.setMapperClass(MyMapper.class);
         job.setMapOutputKeyClass(Text.class);
@@ -52,7 +52,7 @@ public class WordCount extends Configured implements Tool {
         job.setOutputValueClass(IntWritable.class);
 
         job.setOutputFormatClass(TextOutputFormat.class);
-        TextOutputFormat.setOutputPath(job, new Path("/Users/wangyuxuan/数据/out_result"));
+        TextOutputFormat.setOutputPath(job, new Path("file:///"));
 
         boolean b = job.waitForCompletion(true);
 
