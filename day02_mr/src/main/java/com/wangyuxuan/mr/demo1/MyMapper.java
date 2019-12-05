@@ -23,6 +23,13 @@ public class MyMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
     private Text text;
     private IntWritable intWritable;
 
+    /**
+     * 初始化方法
+     *
+     * @param context
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
         text = new Text();

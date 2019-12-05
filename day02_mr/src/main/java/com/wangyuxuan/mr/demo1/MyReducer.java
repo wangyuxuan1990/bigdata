@@ -15,6 +15,13 @@ public class MyReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
     private IntWritable intWritable;
 
+    /**
+     * 初始化方法
+     *
+     * @param context
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
         intWritable = new IntWritable();
@@ -31,6 +38,7 @@ public class MyReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
      */
     @Override
     protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+        // result局部变量不能放在setup初始化方法当中，否则计数错误（为累加结果），因为reduce方法是按分组进行调用。
         int result = 0;
         for (IntWritable value : values) {
             result += value.get();
