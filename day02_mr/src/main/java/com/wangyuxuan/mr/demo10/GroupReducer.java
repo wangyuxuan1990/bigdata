@@ -14,6 +14,21 @@ public class GroupReducer extends Reducer<OrderBean, NullWritable, OrderBean, Nu
 
     @Override
     protected void reduce(OrderBean key, Iterable<NullWritable> values, Context context) throws IOException, InterruptedException {
-        context.write(key, NullWritable.get());
+        // 分组求Top1
+//        context.write(key, NullWritable.get());
+
+        // 分组求TopN
+
+        // 需要对我们集合只输出两个值
+        int i = 0;
+        for (NullWritable value : values) {
+            if (i < 2) {
+                context.write(key, value);
+                i++;
+            } else {
+                break;
+            }
+
+        }
     }
 }

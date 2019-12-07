@@ -19,13 +19,14 @@ public class OrderBean implements WritableComparable<OrderBean> {
 
     @Override
     public int compareTo(OrderBean o) {
-
+        // 注意：如果是不同的订单之间，金额不需要排序，没有可比性
         int orderIdCompare = this.orderId.compareTo(o.orderId);
-
         if (orderIdCompare == 0) {
+            // 比较金额，按照金额进行排序
             int priceCompare = this.price.compareTo(o.price);
             return -priceCompare;
         } else {
+            // 如果订单号不同，没有可比性，直接返回订单号的排序即可
             return orderIdCompare;
         }
     }
