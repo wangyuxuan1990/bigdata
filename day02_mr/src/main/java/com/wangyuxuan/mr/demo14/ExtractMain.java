@@ -19,21 +19,29 @@ import org.apache.hadoop.util.ToolRunner;
 public class ExtractMain extends Configured implements Tool {
     @Override
     public int run(String[] args) throws Exception {
+        if (args == null || args.length != 2) {
+            System.out.println("please input Path!");
+            System.exit(0);
+        }
+
         Job job = Job.getInstance(super.getConf(), "ExtractJob");
         job.setJarByClass(ExtractMain.class);
 
         job.setInputFormatClass(TextInputFormat.class);
-        TextInputFormat.addInputPath(job, new Path("file:///"));
+        TextInputFormat.addInputPath(job, new Path(args[0]));
 
         job.setMapperClass(ExtractMapper.class);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(NullWritable.class);
 
+        //注意：因为不需要reduce聚合阶段，所以，需要显示设置reduce task个数是0
+        job.setNumReduceTasks(0);
+
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(NullWritable.class);
 
         job.setOutputFormatClass(TextOutputFormat.class);
-        TextOutputFormat.setOutputPath(job, new Path("file:///"));
+        TextOutputFormat.setOutputPath(job, new Path(args[1]));
 
         boolean b = job.waitForCompletion(true);
         return b ? 0 : 1;
