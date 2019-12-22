@@ -12,6 +12,7 @@
         <module>day01_hdfs</module>
         <module>day02_mr</module>
         <module>day03_zk</module>
+        <module>youtube</module>
     </modules>
 
 </project>
