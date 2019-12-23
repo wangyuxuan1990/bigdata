@@ -13,6 +13,7 @@
         <module>day02_mr</module>
         <module>day03_zk</module>
         <module>youtube</module>
+        <module>day05_hbase</module>
     </modules>
 
 </project>
