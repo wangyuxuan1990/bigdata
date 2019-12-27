@@ -14,6 +14,7 @@
         <module>day03_zk</module>
         <module>day05_hbase</module>
         <module>youtube</module>
+        <module>day04_hive</module>
     </modules>
 
 </project>
