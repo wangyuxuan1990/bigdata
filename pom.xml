@@ -15,6 +15,7 @@
         <module>day05_hbase</module>
         <module>youtube</module>
         <module>day04_hive</module>
+        <module>phoenix</module>
     </modules>
 
 </project>
