@@ -16,6 +16,7 @@
         <module>youtube</module>
         <module>day04_hive</module>
         <module>phoenix</module>
+        <module>weibo</module>
     </modules>
 
 </project>
