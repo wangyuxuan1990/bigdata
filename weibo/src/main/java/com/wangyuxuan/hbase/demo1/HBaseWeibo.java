@@ -34,7 +34,7 @@ public class HBaseWeibo {
     /**
      * 收件箱表
      */
-    private static final byte[] WEIBO_CRCEIVE_CONTENT_EMAIL = "weibo:receive_content_email".getBytes();
+    private static final byte[] WEIBO_RECEIVE_CONTENT_EMAIL = "weibo:receive_content_email".getBytes();
 
     /**
      * 创建命名空间
@@ -125,8 +125,8 @@ public class HBaseWeibo {
         // 生成Admin对象
         Admin admin = connection.getAdmin();
         // 创建
-        if (!admin.tableExists(TableName.valueOf(WEIBO_CRCEIVE_CONTENT_EMAIL))) {
-            HTableDescriptor weibo_receive_content_email = new HTableDescriptor(TableName.valueOf(WEIBO_CRCEIVE_CONTENT_EMAIL));
+        if (!admin.tableExists(TableName.valueOf(WEIBO_RECEIVE_CONTENT_EMAIL))) {
+            HTableDescriptor weibo_receive_content_email = new HTableDescriptor(TableName.valueOf(WEIBO_RECEIVE_CONTENT_EMAIL));
             HColumnDescriptor info = new HColumnDescriptor("info");
             // 指定最小版本、最大版本
             info.setMinVersions(1000);
