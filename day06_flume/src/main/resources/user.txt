@@ -1,0 +1,8 @@
+13901007610,male,30,sing,beijing
+18600000035,male,40,dance,shanghai
+13366666659,male,20,Swimming,wuhan
+13801179888,female,18,dance,tianjin
+18511111114,male,35,sing,beijing
+13718428888,female,40,Foodie,shanghai
+13901057088,male,50,Basketball,taiwan
+13671057777,male,60,Bodybuilding,xianggang

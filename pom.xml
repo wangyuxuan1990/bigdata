@@ -17,6 +17,7 @@
         <module>day04_hive</module>
         <module>phoenix</module>
         <module>weibo</module>
+        <module>day06_flume</module>
     </modules>
 
 </project>
