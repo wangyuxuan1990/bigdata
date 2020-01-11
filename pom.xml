@@ -18,6 +18,7 @@
         <module>phoenix</module>
         <module>weibo</module>
         <module>day06_flume</module>
+        <module>day07_spark</module>
     </modules>
 
 </project>
