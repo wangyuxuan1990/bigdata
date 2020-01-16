@@ -19,6 +19,7 @@
         <module>weibo</module>
         <module>day06_flume</module>
         <module>day07_spark</module>
+        <module>day08_impala</module>
     </modules>
 
 </project>
