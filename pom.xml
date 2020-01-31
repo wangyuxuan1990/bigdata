@@ -21,6 +21,7 @@
         <module>day07_spark</module>
         <module>day08_impala</module>
         <module>day09_jvm</module>
+        <module>day10_elk</module>
     </modules>
 
 </project>
