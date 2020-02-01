@@ -11,9 +11,11 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.transport.TransportAddress;
+import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
@@ -46,6 +48,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -733,6 +736,52 @@ public class ESOperate {
                 Aggregation total_salary = bucket.getAggregations().get("total_salary");
                 System.out.println(total_salary.toString());
             }
+        }
+    }
+
+    /**
+     * 基于地理位置的搜索
+     */
+    @Test
+    public void locationQuery() {
+        /**
+         * 基于矩形范围的数据搜索
+         * 40.0519526142,116.4178513254
+         * 40.0385828363,116.4465266673
+         */
+        SearchResponse searchResponse = client.prepareSearch("platform_foreign_website").setTypes("store").setQuery(QueryBuilders.geoBoundingBoxQuery("location")
+                .setCorners(40.0519526142, 116.4178513254, 40.0385828363, 116.4465266673)).get();
+        for (SearchHit hit : searchResponse.getHits().getHits()) {
+            System.out.println(hit.getSourceAsString());
+        }
+
+        System.out.println("====================分割线=====================");
+
+        /**
+         * 找出坐落在多边形当中的坐标点
+         * 40.0519526142,116.4178513254
+         * 40.0503813013,116.4562592119
+         * 40.0385828363,116.4465266673
+         */
+        List<GeoPoint> points = new ArrayList<>();
+        points.add(new GeoPoint(40.0519526142, 116.4178513254));
+        points.add(new GeoPoint(40.0503813013, 116.4562592119));
+        points.add(new GeoPoint(40.0385828363, 116.4465266673));
+        SearchResponse searchResponse1 = client.prepareSearch("platform_foreign_website").setTypes("store").setQuery(QueryBuilders.geoPolygonQuery("location", points)).get();
+        for (SearchHit hit : searchResponse1.getHits().getHits()) {
+            System.out.println(hit.getSourceAsString());
+        }
+
+        System.out.println("====================分割线=====================");
+
+        /**
+         * 以当前的点为中心，搜索落在半径范围内200公里的经纬度坐标点
+         * 40.0488115498,116.4320345091
+         */
+        SearchResponse searchResponse2 = client.prepareSearch("platform_foreign_website").setTypes("store").setQuery(QueryBuilders.geoDistanceQuery("location")
+                .point(40.0488115498, 116.4320345091).distance(200, DistanceUnit.KILOMETERS)).get();
+        for (SearchHit hit : searchResponse2.getHits().getHits()) {
+            System.out.println(hit.getSourceAsString());
         }
     }
 
