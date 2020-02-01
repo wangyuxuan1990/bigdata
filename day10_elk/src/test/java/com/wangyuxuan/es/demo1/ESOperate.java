@@ -41,6 +41,7 @@ import org.elasticsearch.search.aggregations.metrics.sum.SumAggregationBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.elasticsearch.xpack.sql.jdbc.EsDataSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,10 +49,11 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
@@ -783,6 +785,30 @@ public class ESOperate {
         for (SearchHit hit : searchResponse2.getHits().getHits()) {
             System.out.println(hit.getSourceAsString());
         }
+    }
+
+    /**
+     * 使用jdbc连接es服务器，然后查询数据
+     * 需要license
+     */
+    @Test
+    public void esJdbc() throws SQLException {
+        EsDataSource dataSource = new EsDataSource();
+        String address = "jdbc:es://http://node01:9200";
+        dataSource.setUrl(address);
+        Properties connectionProperties = new Properties();
+        dataSource.setProperties(connectionProperties);
+        Connection connection = dataSource.getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select * from library");
+        while (resultSet.next()) {
+            String string = resultSet.getString(0);
+            String string1 = resultSet.getString(1);
+            int anInt = resultSet.getInt(2);
+            String string2 = resultSet.getString(4);
+            System.out.println(string + "\t" + string1 + "\t" + anInt + "\t" + string2);
+        }
+        connection.close();
     }
 
     /**
