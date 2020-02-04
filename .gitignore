@@ -13,3 +13,7 @@ target
 *.iml
 .idea
 dependency-reduced-pom.xml
+spark-warehouse
+metastore_db
+derby.log
+day07_spark/data
