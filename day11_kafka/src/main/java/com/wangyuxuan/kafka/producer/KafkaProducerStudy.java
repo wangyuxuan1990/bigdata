@@ -30,10 +30,20 @@ public class KafkaProducerStudy {
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
+        // 添加自定义分区函数
+        props.put("partitioner.class", "com.wangyuxuan.kafka.partitioner.MyPartitioner");
+
         Producer<String, String> producer = new KafkaProducer<String, String>(props);
 
         for (int i = 0; i < 100; i++) {
-            // 这里需要三个参数，第一个：topic的名称，第二个参数：表示消息的key,第三个参数：消息具体内容
+            // 1、给定具体的分区号，数据就会写入到指定的分区中
+//            producer.send(new ProducerRecord<String, String>("test", 0, Integer.toString(i), "hello-kafka-" + i));
+            // 2、不给定具体的分区号，给定一个key值 ,这里使用key的 hashcode%分区数=分区号
+            // 如果想要指定一个key值，这里就需要key是不断变化
+//            producer.send(new ProducerRecord<String, String>("test", Integer.toString(i), "hello-kafka-" + i));
+            // 3、不给定具体的分区号，也不给定对应的key ,这个它会进行轮训的方式把数据写入到不同分区中
+//            producer.send(new ProducerRecord<String, String>("test", "hello-kafka-" + i));
+            // 4、自定义分区函数
             producer.send(new ProducerRecord<String, String>("test", Integer.toString(i), "hello-kafka-" + i));
         }
 
