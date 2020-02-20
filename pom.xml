@@ -23,6 +23,7 @@
         <module>day09_jvm</module>
         <module>day10_elk</module>
         <module>day11_kafka</module>
+        <module>day12_sparkstreaming</module>
     </modules>
 
 </project>
