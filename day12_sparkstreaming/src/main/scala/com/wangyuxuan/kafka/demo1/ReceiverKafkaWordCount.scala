@@ -26,7 +26,8 @@ object ReceiverKafkaWordCount {
       "group.id" -> "test1"
     )
 
-    val topics = "sparkstreaming".split(",").map((_, 1)).toMap
+    //    val topics = "sparkstreaming".split(",").map((_, 1)).toMap
+    val topics: Map[String, Int] = Map("sparkstreaming" -> 1)
     // 步骤二：获取数据源
     // 默认只会有一个receiver
     //    val kafkaStreams = (1 to 20).map(_ => {

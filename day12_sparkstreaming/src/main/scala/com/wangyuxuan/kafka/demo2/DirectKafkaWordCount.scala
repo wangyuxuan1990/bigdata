@@ -23,12 +23,14 @@ object DirectKafkaWordCount {
      * 0.8 API  -> 消费  1.0集群的数据
      */
     val kafkaParams: Map[String, String] = Map[String, String](
-      "bootstrap.servers" -> "node01:2181,node02:2181,node03:2181",
+      "bootstrap.servers" -> "node01:9092,node02:9092,node03:9092",
+      "zookeeper.connect" -> "node01:2181,node02:2181,node03:2181",
       "group.id" -> "test2",
-      "enable.auto.commit" -> "false"
+      "auto.commit.enable" -> "false"
     )
 
-    val topics = "sparkstreaming".split(",").toSet()
+    //    val topics = "sparkstreaming".split(",").toSet()
+    val topics: Set[String] = Set("sparkstreaming")
 
     // 步骤二：获取数据源
     /**
