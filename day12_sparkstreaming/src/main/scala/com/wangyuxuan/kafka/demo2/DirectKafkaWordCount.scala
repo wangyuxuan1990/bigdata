@@ -26,7 +26,7 @@
 //      "bootstrap.servers" -> "node01:9092,node02:9092,node03:9092",
 //      "zookeeper.connect" -> "node01:2181,node02:2181,node03:2181",
 //      "group.id" -> "test2",
-//      "auto.commit.enable" -> "false"
+//      "enable.auto.commit" -> "false"
 //    )
 //
 //    //    val topics = "sparkstreaming".split(",").toSet()
