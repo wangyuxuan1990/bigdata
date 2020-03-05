@@ -30,7 +30,7 @@
 //    val kafkaParams: Map[String, String] = Map[String, String](
 //      "metadata.broker.list" -> brokers,
 //      "group.id" -> groupId,
-//      "enable.auto.commit" -> "false"
+//      "auto.commit.enable" -> "false"
 //    )
 //
 //    // 关键步骤一：设置监听器，帮我们完成偏移量的提交
