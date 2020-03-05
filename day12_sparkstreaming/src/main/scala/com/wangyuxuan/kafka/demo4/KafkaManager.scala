@@ -12,7 +12,7 @@ import org.apache.spark.streaming.api.java.{JavaPairInputDStream, JavaStreamingC
 import org.apache.spark.streaming.dstream.InputDStream
 import org.apache.spark.streaming.kafka.KafkaCluster.{Err, LeaderOffset}
 import org.apache.spark.streaming.kafka.{HasOffsetRanges, KafkaCluster, KafkaUtils, OffsetRange}
-
+import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
 
 /**
@@ -59,25 +59,28 @@ class KafkaManager(val kafkaParams: Map[String, String]) extends Serializable {
     message
   }
 
-//  def createDirectStream[K, V, KD <: Decoder[K], VD <: Decoder[V]](
-//                                                                    jssc: JavaStreamingContext,
-//                                                                    keyClass: Class[K],
-//                                                                    valueClass: Class[V],
-//                                                                    keyDecoderClass: Class[KD],
-//                                                                    valueDecoderClass: Class[VD],
-//                                                                    kafkaParams: JMap[String, String],
-//                                                                    topics: JSet[String]
-//                                                                  ): JavaPairInputDStream[K, V] = {
-//    implicit val keyCmt: ClassTag[K] = ClassTag(keyClass)
-//    implicit val valueCmt: ClassTag[V] = ClassTag(valueClass)
-//    implicit val keyDecoderCmt: ClassTag[KD] = ClassTag(keyDecoderClass)
-//    implicit val valueDecoderCmt: ClassTag[VD] = ClassTag(valueDecoderClass)
-//    createDirectStream[K, V, KD, VD](
-//      jssc.ssc,
-//      Map(kafkaParams.asScala.toSeq: _*),
-//      Set(topics.asScala.toSeq: _*)
-//    )
-//  }
+  /**
+   * 创建数据流 Java API
+   */
+  def createDirectStream[K, V, KD <: Decoder[K], VD <: Decoder[V]](
+                                                                    jssc: JavaStreamingContext,
+                                                                    keyClass: Class[K],
+                                                                    valueClass: Class[V],
+                                                                    keyDecoderClass: Class[KD],
+                                                                    valueDecoderClass: Class[VD],
+                                                                    kafkaParams: JMap[String, String],
+                                                                    topics: JSet[String]
+                                                                  ): JavaPairInputDStream[K, V] = {
+    implicit val keyCmt: ClassTag[K] = ClassTag(keyClass)
+    implicit val valueCmt: ClassTag[V] = ClassTag(valueClass)
+    implicit val keyDecoderCmt: ClassTag[KD] = ClassTag(keyDecoderClass)
+    implicit val valueDecoderCmt: ClassTag[VD] = ClassTag(valueDecoderClass)
+    createDirectStream[K, V, KD, VD](
+      jssc.ssc,
+      Map(kafkaParams.asScala.toSeq: _*),
+      Set(topics.asScala.toSeq: _*)
+    )
+  }
 
   /**
    * 创建数据流前，根据实际消费情况更新消费offsets
