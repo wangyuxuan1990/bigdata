@@ -24,6 +24,7 @@
         <module>day10_elk</module>
         <module>day11_kafka</module>
         <module>day12_sparkstreaming</module>
+        <module>day13_flink</module>
     </modules>
 
 </project>
