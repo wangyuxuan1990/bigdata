@@ -14,7 +14,7 @@ object FlinkStream {
     // 获取程序入口类
     val environment: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
     // 从socket当中获取数据
-    val resultDataStream: DataStream[String] = environment.socketTextStream("localhost", 9000)
+    val resultDataStream: DataStream[String] = environment.socketTextStream("node01", 9999)
     // 导入隐式转换的包
     import org.apache.flink.api.scala._
     // 对数据进行计算操作

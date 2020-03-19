@@ -5,7 +5,8 @@ import org.apache.flink.api.scala.ExecutionEnvironment
 /**
  * @author wangyuxuan
  * @date 2020/3/18 11:43
- * @description
+ * @description 离线代码开发
+ *              对文件进行单词计数，统计文件当中每个单词出现的次数
  */
 object FlinkFileCount {
   def main(args: Array[String]): Unit = {
