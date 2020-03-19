@@ -28,7 +28,7 @@ object Stream2Redis {
     builder.setMaxIdle(10) // 最大客户端空闲数
     builder.setMinIdle(5) // 最小客户端空闲数
     val config: FlinkJedisPoolConfig = builder.build()
-    //获取redis  sink
+    // 获取redis  sink
     val redisSink: RedisSink[(String, String)] = new RedisSink[Tuple2[String, String]](config, new MyRedisMapper)
 
     // 使用我们自定义的sink
