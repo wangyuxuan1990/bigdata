@@ -9,7 +9,8 @@ import org.apache.flink.util.Collector
 /**
  * @author wangyuxuan
  * @date 2020/3/20 17:34
- * @description 需求：使用valueState实现平均值求取
+ * @description ValueState 用于保存每个key的数据为任意一个value
+ *              需求：使用valueState实现平均值求取
  */
 object ValueStateOperate {
   def main(args: Array[String]): Unit = {
@@ -51,7 +52,7 @@ class CountWindowAverage extends RichFlatMapFunction[(Long, Double), (Long, Doub
     if (newSum._1 >= 2) {
       out.collect((input._1, newSum._2 / newSum._1))
       // 将状态清除
-//      sum.clear()
+      //      sum.clear()
     }
   }
 }
