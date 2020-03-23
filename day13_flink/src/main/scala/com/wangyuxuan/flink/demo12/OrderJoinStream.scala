@@ -2,8 +2,13 @@ package com.wangyuxuan.flink.demo12
 
 import java.util.concurrent.TimeUnit
 
+import org.apache.flink.api.common.restartstrategy.RestartStrategies
 import org.apache.flink.api.common.state.{ValueState, ValueStateDescriptor}
 import org.apache.flink.configuration.Configuration
+import org.apache.flink.contrib.streaming.state.RocksDBStateBackend
+import org.apache.flink.runtime.state.filesystem.FsStateBackend
+import org.apache.flink.streaming.api.CheckpointingMode
+import org.apache.flink.streaming.api.environment.CheckpointConfig.ExternalizedCheckpointCleanup
 import org.apache.flink.streaming.api.functions.co.RichCoFlatMapFunction
 import org.apache.flink.streaming.api.functions.source.SourceFunction
 import org.apache.flink.streaming.api.scala.{DataStream, KeyedStream, StreamExecutionEnvironment}
@@ -36,6 +41,39 @@ case class OrderInfo2(orderId: Long, orderDate: String, address: String)
 object OrderJoinStream {
   def main(args: Array[String]): Unit = {
     val environment: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+
+    // 将state存储到jobManager里面的内存里面，不推荐 使用
+    // environment.setStateBackend(new MemoryStateBackend())
+    // 将state存放到文件系统里面去
+    environment.setStateBackend(new FsStateBackend("hdfs://node01:8020/flink_state"))
+    // 将state保存到rockets-DB里面去
+    // environment.setStateBackend(new RocksDBStateBackend("hdfs://node01:8020/flink/checkDir",true))
+    // 固定间隔重启，尝试重启5次，每次间隔时间10000毫秒  一般用这种方式 实际工作当中次数一般在3-5次
+    environment.setRestartStrategy(RestartStrategies.fixedDelayRestart(5, 10000))
+    // 基于失败率的重启 用的不多
+    // environment.setRestartStrategy(RestartStrategies.failureRateRestart(20, org.apache.flink.api.common.time.Time.seconds(10), org.apache.flink.api.common.time.Time.seconds(10)))
+    // 不重启
+    //environment.setRestartStrategy(RestartStrategies.noRestart())
+
+    // 默认checkpoint功能是disabled的，想要使用的时候需要先启用
+    // 每隔1000 ms进行启动一个检查点【设置checkpoint的周期】
+    environment.enableCheckpointing(1000)
+    // 高级选项：
+    // 设置模式为exactly-once （这是默认值）
+    environment.getCheckpointConfig.setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE)
+    // 确保检查点之间有至少500 ms的间隔【checkpoint最小间隔】
+    environment.getCheckpointConfig.setMinPauseBetweenCheckpoints(500)
+    // 检查点必须在一分钟内完成，或者被丢弃【checkpoint的超时时间】
+    environment.getCheckpointConfig.setCheckpointTimeout(60000)
+    // 同一时间只允许进行一个检查点
+    environment.getCheckpointConfig.setMaxConcurrentCheckpoints(1)
+    // 表示一旦Flink处理程序被cancel后，会保留Checkpoint数据，以便根据实际需要恢复到指定的Checkpoint【详细解释见备注】
+    /**
+     * ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION:表示一旦Flink处理程序被cancel后，会保留Checkpoint数据，以便根据实际需要恢复到指定的Checkpoint
+     * ExternalizedCheckpointCleanup.DELETE_ON_CANCELLATION: 表示一旦Flink处理程序被cancel后，会删除Checkpoint数据，只有job执行失败的时候才会保存checkpoint
+     */
+    environment.getCheckpointConfig.enableExternalizedCheckpoints(ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION)
+
     import org.apache.flink.api.scala._
     // 读取两个自定义数据源
     val orderInfo1: DataStream[String] = environment.addSource(new FileSourceFunction("D:\\数据\\orderInfo1.txt"))
