@@ -20,8 +20,8 @@ object TimeWindowFirst {
     socketSource.flatMap(x => x.split(" "))
       .map(x => (x, 1))
       .keyBy(0)
-      .timeWindow(Time.seconds(10)) // 接受一个参数就是一个滚动窗口
-      //      .timeWindow(Time.seconds(10), Time.seconds(5)) // 接受两个参数，就是一个滑动窗口。如果时间值是一样的，就变成了滚动窗口
+      //      .timeWindow(Time.seconds(10)) // 接受一个参数就是一个滚动窗口
+      .timeWindow(Time.seconds(10), Time.seconds(5)) // 接受两个参数，就是一个滑动窗口。如果时间值是一样的，就变成了滚动窗口
       .sum(1)
       .print()
     environment.execute()
