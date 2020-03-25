@@ -1,15 +1,13 @@
 package com.wangyuxuan.flink.demo10
 
-import java.lang
 import java.util.Collections
+import java.{lang, util}
 
 import org.apache.flink.api.common.functions.RichFlatMapFunction
 import org.apache.flink.api.common.state.{ListState, ListStateDescriptor}
 import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.util.Collector
-
-import scala.collection.mutable.ListBuffer
 
 /**
  * @author wangyuxuan
@@ -60,26 +58,21 @@ class CountLoginWithList extends RichFlatMapFunction[(String, String, Long), Str
     }
     userLoginByKey.add(login)
     import scala.collection.JavaConverters._
-    val allLogin: Iterator[(String, String, Long)] = userLoginByKey.get().iterator().asScala
-    val allLoginList: List[(String, String, Long)] = allLogin.toList
-
-    if (allLoginList.size >= 3) {
-      if (allLoginList.size > 3) {
-        val listBuffer: ListBuffer[(String, String, Long)] = new ListBuffer[(String, String, Long)]
-        for (eachLogin <- allLoginList.tail) {
-          listBuffer.+=(eachLogin)
-        }
-        userLoginByKey.update(listBuffer.asJava)
-      }
-      val newAllLogin: Iterator[(String, String, Long)] = userLoginByKey.get().iterator().asScala
-      val newAllLoginList: List[(String, String, Long)] = newAllLogin.toList
-      val firstLogin: (String, String, Long) = newAllLoginList(0)
-      val lastLogin: (String, String, Long) = newAllLoginList(2)
+    val allLoginList: List[(String, String, Long)] = userLoginByKey.get().iterator().asScala.toList
+    allLoginList.sortBy(x => x._3)
+    if (allLoginList.size == 3) {
+      val firstLogin: (String, String, Long) = allLoginList(0)
+      val lastLogin: (String, String, Long) = allLoginList(2)
       if ((lastLogin._3 - firstLogin._3) <= 30000) {
-        for (eachLogin <- newAllLoginList) {
+        for (eachLogin <- allLoginList) {
           println(eachLogin.toString())
         }
       }
+      val tuples: util.ArrayList[(String, String, Long)] = new util.ArrayList[(String, String, Long)]()
+      for (eachLogin <- allLoginList.tail) {
+        tuples.add(eachLogin)
+      }
+      userLoginByKey.update(tuples)
     }
   }
 }
