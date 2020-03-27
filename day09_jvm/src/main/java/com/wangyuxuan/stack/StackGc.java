@@ -3,7 +3,7 @@ package com.wangyuxuan.stack;
 /**
  * @author wangyuxuan
  * @date 2020/1/27 5:08 下午
- * @description 局部变量随着可能会影响到系统垃圾收集的行为
+ * @description 局部变量复用slot还伴随着可能会影响到系统垃圾收集的行为
  */
 public class StackGc {
     // 示例一  垃圾没有被回收
